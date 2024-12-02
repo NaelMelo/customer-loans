@@ -17,3 +17,4 @@ public class LoansController {
         return ResponseEntity.ok(payload);
     }
 }
+
