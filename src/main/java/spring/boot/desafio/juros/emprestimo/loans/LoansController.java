@@ -1,20 +1,25 @@
 package spring.boot.desafio.juros.emprestimo.loans;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 
 @RestController
-@RequestMapping("/customer-loans")
 public class LoansController {
-    @PostMapping
+
+    @Autowired
+    private LoansService loansService;
+
+    @GetMapping("/customer-loans")
     public Object getAvailableLoans(@RequestBody LoansRequestPayload payload){
-        Loans newLoans = new Loans(payload);
-        return ResponseEntity.ok(payload);
+        LoansCustomer newLoansCustomer = new LoansCustomer(payload);
+        List<LoansOptions> availableLoans = loansService.getAvailableLoans(newLoansCustomer);
+        CustomerLoans customerLoans = new CustomerLoans();
+        customerLoans.setCustomer(newLoansCustomer.getName());
+        customerLoans.setLoans(availableLoans);
+        return ResponseEntity.ok(customerLoans);
     }
 }
 
